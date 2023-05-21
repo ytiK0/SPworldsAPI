@@ -1,0 +1,25 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.2.32526.322
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SPworldsAPI", "SPworldsAPI\SPworldsAPI.csproj", "{EE59C4AA-7A1A-49CA-8C97-2C1F8245A465}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{EE59C4AA-7A1A-49CA-8C97-2C1F8245A465}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{EE59C4AA-7A1A-49CA-8C97-2C1F8245A465}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{EE59C4AA-7A1A-49CA-8C97-2C1F8245A465}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{EE59C4AA-7A1A-49CA-8C97-2C1F8245A465}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {DF1FDB4D-1900-4003-AF35-B3E8A3FB592E}
+	EndGlobalSection
+EndGlobal
