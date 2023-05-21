@@ -9,67 +9,81 @@ namespace SPworldsAPI
 
     public class SPWorldsApiClient
     {
-        private readonly string _id;
         private readonly string _token;
         private readonly string _webhookUrl;
         private readonly HttpClient _httpClient;
 
         public SPWorldsApiClient(string id, string token, string webhookUrl)
         {
-            _id = id;
             _token = token;
             _webhookUrl = webhookUrl;
             _httpClient = new HttpClient();
             _httpClient.BaseAddress = new Uri("https://spworlds.ru/api/public/");
-            _httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", Base64Encode($"{_id}:{_token}"));
+            _httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", Base64Encode($"{id}:{_token}"));
+        }
+
+        private async Task<string> SendRequest(string route, Dictionary<string, object>? requestData = null)
+        {
+            HttpResponseMessage response;
+
+            if (requestData == null)
+                response = await _httpClient.GetAsync(route);
+            else
+            {
+                var json = JsonConvert.SerializeObject(requestData);
+                var requestContent = new StringContent(json, Encoding.UTF8, "application/json");
+                response = await _httpClient.PostAsync(route, requestContent);
+            }
+            response.EnsureSuccessStatusCode();
+            return await response.Content.ReadAsStringAsync();
         }
 
         public async Task<int> GetCardBalanceAsync()
         {
-            var response = await _httpClient.GetAsync("card");
-            var responceContent = await response.Content.ReadAsStringAsync();
-            var balanceResponce = JsonConvert.DeserializeObject<CardBalanceResponce>(responceContent);
-            return balanceResponce.balance;
+            var responseContent = await SendRequest("card");
+            var balanceResponse = JsonConvert.DeserializeObject<CardBalanceResponse>(responseContent);
+            return balanceResponse.balance;
         }
 
         public async Task<string> CreatePaymentRequestAsync(int amount, string redirectUrl, string data)
         {
-            var request = new Dictionary<string, object>
+            if (data.Length > 100)
+                throw new Exception("Слишком много данных");
+            var requestData = new Dictionary<string, object>
             {
                 { "amount", amount },
                 { "redirectUrl", redirectUrl },
                 { "webhookUrl", _webhookUrl },
                 { "data", data }
             };
-            var json = JsonConvert.SerializeObject(request);
+            var json = JsonConvert.SerializeObject(requestData);
             var requestContent = new StringContent(json, Encoding.UTF8, "application/json");
             var response = await _httpClient.PostAsync("payment", requestContent);
-            var responceContent = await response.Content.ReadAsStringAsync();
-            var paymentResponce = JsonConvert.DeserializeObject<PaymentRequestResponce>(responceContent);
-            return paymentResponce.url;
+            var responseContent = await response.Content.ReadAsStringAsync();
+            var paymentResponse = JsonConvert.DeserializeObject<PaymentRequestResponse>(responseContent);
+            return paymentResponse.url;
         }
 
         public async void MakeTransferAsync(string receiver, int amount, string comment)
         {
-            var request = new Dictionary<string, object>
+            var requestData = new Dictionary<string, object>
             {
                 { "receiver", receiver },
                 { "amount", amount },
                 { "comment", comment }
             };
-            var json = JsonConvert.SerializeObject(request);
+            var json = JsonConvert.SerializeObject(requestData);
             var requestContent = new StringContent(json, Encoding.UTF8, "application/json");
             var response = await _httpClient.PostAsync("transactions", requestContent);
-            if (!response.IsSuccessStatusCode)
-                throw new Exception("Операция провалилась");
+            response.EnsureSuccessStatusCode();
         }
 
         public async Task<string> GetDiscordNicknameAsync(string discordId)
         {
             var response = await _httpClient.GetAsync($"users/{discordId}");
-            var responceContent = await response.Content.ReadAsStringAsync();
-            var usernameResponce = JsonConvert.DeserializeObject<DiscordUsernameResponce>(responceContent);
-            return usernameResponce.username;
+            var responseContent = await response.Content.ReadAsStringAsync();
+            var usernameResponse = JsonConvert.DeserializeObject<DiscordUsernameResponse>(responseContent);
+            return usernameResponse.username;
         }
 
         private string Base64Encode(string input)

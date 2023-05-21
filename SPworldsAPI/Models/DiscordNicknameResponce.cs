@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace SPworldsAPI.Models
 {
-    public class DiscordUsernameResponce
+    public class DiscordUsernameResponse
     {
         public string username { get; set; }
     }

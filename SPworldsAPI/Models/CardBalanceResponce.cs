@@ -1,6 +1,6 @@
 ﻿namespace SPworldsAPI.Models
 {
-    public class CardBalanceResponce
+    public class CardBalanceResponse
     {
         public int balance { get; set; } 
     }

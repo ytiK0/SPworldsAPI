@@ -8,8 +8,8 @@ namespace SPworldsAPI.Models
 {
     public class TransactionResponse
     {
-        public string Id { get; set; }
-        public int Amount { get; set; }
-        public string Comment { get; set; }
+        public string id { get; set; }
+        public int amount { get; set; }
+        public string comment { get; set; }
     }
 }

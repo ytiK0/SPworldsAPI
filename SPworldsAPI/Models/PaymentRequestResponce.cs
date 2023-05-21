@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace SPworldsAPI.Models
 {
-    public class PaymentRequestResponce
+    public class PaymentRequestResponse
     {
         public string url { get; set; }
     }
