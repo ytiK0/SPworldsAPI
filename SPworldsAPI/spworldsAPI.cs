@@ -56,10 +56,7 @@ namespace SPworldsAPI
                 { "webhookUrl", _webhookUrl },
                 { "data", data }
             };
-            var json = JsonConvert.SerializeObject(requestData);
-            var requestContent = new StringContent(json, Encoding.UTF8, "application/json");
-            var response = await _httpClient.PostAsync("payment", requestContent);
-            var responseContent = await response.Content.ReadAsStringAsync();
+            var responseContent = await SendRequest("payment", requestData);
             var paymentResponse = JsonConvert.DeserializeObject<PaymentRequestResponse>(responseContent);
             return paymentResponse.url;
         }
@@ -72,16 +69,13 @@ namespace SPworldsAPI
                 { "amount", amount },
                 { "comment", comment }
             };
-            var json = JsonConvert.SerializeObject(requestData);
-            var requestContent = new StringContent(json, Encoding.UTF8, "application/json");
-            var response = await _httpClient.PostAsync("transactions", requestContent);
-            response.EnsureSuccessStatusCode();
+            await SendRequest("transactions", requestData);
         }
+        
 
         public async Task<string> GetDiscordNicknameAsync(string discordId)
         {
-            var response = await _httpClient.GetAsync($"users/{discordId}");
-            var responseContent = await response.Content.ReadAsStringAsync();
+            var responseContent = await SendRequest($"users/{discordId}");
             var usernameResponse = JsonConvert.DeserializeObject<DiscordUsernameResponse>(responseContent);
             return usernameResponse.username;
         }
